@@ -1,0 +1,387 @@
+#!/usr/bin/env python
+#
+# $Author: frederic $
+#       $Date: 2015/03/06 14:02:28 $
+#       $Id: midregressors,v 1.1.1.1 2015/03/06 14:02:28 frederic Exp $
+#
+
+from __future__ import print_function
+
+from numpy import zeros
+import io
+import sys
+
+def usage():
+    print("usage: midregressors inputfile outputroot [offset]")
+    print("")
+    print("required arguments:")
+    print("    inputfile    - the name of the E-prime output file")
+    print("    outputroot   - the base name of all the output files")
+    print("")
+    print("optional arguments:")
+    print("    offset       - offset value, in seconds, to add to every onset time (used for concatenating runs)")
+    
+def writeregressor(data, filename):
+    file = open(filename, 'w')
+    for i in range(0,len(data)):
+        file.writelines(str(data[i][0])+'\t'+str(data[i][1])+'\t'+str(data[i][2])+'\n')
+    file.close()
+
+def readvecs(inputfilename,filetype):
+    if filetype==1:
+        theencoding='utf-16-le'
+    if filetype==2:
+        theencoding='utf-16'
+    file = io.open(inputfilename, 'rU', encoding=theencoding)
+    datalist = []
+    for line in file:
+        thetokens = line.replace('\n','').split('\t')
+	datalist.append(thetokens)
+    numlines = len(datalist)
+    numfields = len(datalist[:][0])
+    print('Data file has '+str(numlines)+' lines with '+str(numfields)+' fields')
+    return(datalist)
+
+####
+# control flow starts here
+####
+
+# get the command line parameters
+if ((len(sys.argv) < 3) or (len(sys.argv) > 4)):
+    usage()
+    sys.exit()
+
+# handle required args first
+inputfilename = sys.argv[1]
+outputfileroot = sys.argv[2]
+if len(sys.argv)==4:
+    offset = int(sys.argv[3])
+
+filetype=2
+thedata = readvecs(inputfilename,filetype)
+
+# get the column headers
+headerdict = {}
+if filetype==1:
+    headerline = 3
+if filetype==2:
+    headerline = 0
+
+for j in range (0,len(thedata[headerline])):
+    if filetype==1:
+        thelabel = str(thedata[headerline][j]).replace('\r','').replace('\x00','')
+    if filetype==2:
+        thelabel = str(thedata[headerline][j])
+    headerdict[ thelabel ] = j
+
+numlines = len(thedata)
+numfields = len(thedata[0])
+
+ExperimentName = []
+Subject = []
+Session = []
+Age = []
+Clock_Information = []
+DataFile_Basename = []
+Display_RefreshRate = []
+ExperimentVersion = []
+GetReadyDummy_OffsetTime = []
+GetReadyDummy_OnsetTime = []
+Group = []
+Handedness = []
+LowerThresh = []
+Name = []
+RandomSeed = []
+ResearcherID = []
+ResponseVarPEN = []
+ResponseVarREW = []
+RespWindowPen = []
+RespWindowREW = []
+RuntimeVersion = []
+RuntimeVersionExpected = []
+SessionDate = []
+SessionStartDateTimeUtc = []
+SessionTime = []
+Sex = []
+StudioVersion = []
+UpperThresh = []
+Block = []
+BlockList = []
+BlockList_Cycle = []
+BlockList_Sample = []
+endOfBlock_OffsetTime = []
+endOfBlock_OnsetTime = []
+FixationStartBlock_OffsetDelay = []
+FixationStartBlock_OffsetTime = []
+FixationStartBlock_OnsetDelay = []
+FixationStartBlock_OnsetTime = []
+Procedure_Block = []
+Running_Block = []
+Trial = []
+CellNumber = []
+FeedbackNCneutralFast_OffsetDelay = []
+FeedbackNCneutralFast_OffsetTime = []
+FeedbackNCneutralFast_OnsetDelay = []
+FeedbackNCneutralFast_OnsetTime = []
+FeedbackNCneutralSlow_OffsetDelay = []
+FeedbackNCneutralSlow_OffsetTime = []
+FeedbackNCneutralSlow_OnsetDelay = []
+FeedbackNCneutralSlow_OnsetTime = []
+FeedbackNoChangeOnPEN_OffsetDelay = []
+FeedbackNoChangeOnPEN_OffsetTime = []
+FeedbackNoChangeOnPEN_OnsetDelay = []
+FeedbackNoChangeOnPEN_OnsetTime = []
+FeedbackNoChangeOnREW_OffsetDelay = []
+FeedbackNoChangeOnREW_OffsetTime = []
+FeedbackNoChangeOnREW_OnsetDelay = []
+FeedbackNoChangeOnREW_OnsetTime = []
+FeedbackWrongMove_OffsetDelay = []
+FeedbackWrongMove_OffsetTime = []
+FeedbackWrongMove_OnsetDelay = []
+FeedbackWrongMove_OnsetTime = []
+FixationISI1_OffsetDelay = []
+FixationISI1_OffsetTime = []
+FixationISI1_OnsetDelay = []
+FixationISI1_OnsetTime = []
+FixationISI1_RESP = []
+FixationISI1_RT = []
+FixationISI2_OffsetDelay = []
+FixationISI2_OffsetTime = []
+FixationISI2_OnsetDelay = []
+FixationISI2_OnsetTime = []
+FixationISI2_RESP = []
+FixationISI2_RT = []
+FixationITI_OffsetDelay = []
+FixationITI_OffsetTime = []
+FixationITI_OnsetDelay = []
+FixationITI_OnsetTime = []
+Incentive = []
+ISI1_time = []
+ISI2_time = []
+ITI_time = []
+IValues1 = []
+IValues1_Cycle = []
+IValues1_Sample = []
+PenFeedback_OffsetDelay = []
+PenFeedback_OffsetTime = []
+PenFeedback_OnsetDelay = []
+PenFeedback_OnsetTime = []
+Procedure_Trial = []
+PunVal = []
+RespWinPEN = []
+RespWinREW = []
+RewFeedback_OffsetDelay = []
+RewFeedback_OffsetTime = []
+RewFeedback_OnsetDelay = []
+RewFeedback_OnsetTime = []
+RewVal = []
+Running_Trial = []
+Target_OffsetDelay = []
+Target_OffsetTime = []
+Target_OnsetDelay = []
+Target_OnsetTime = []
+Target_RESP = []
+Target_RT = []
+WarningStim_OffsetDelay = []
+WarningStim_OffsetTime = []
+WarningStim_OnsetDelay = []
+WarningStim_OnsetTime = []
+WarningStim_RESP = []
+WarningStim_RT = []
+
+numtrials = 0
+for i in range(headerline+1,numlines):
+    ExperimentName.append(str(thedata[i][headerdict['ExperimentName']] ) ) 
+    Subject.append(float(thedata[i][headerdict['Subject']] ) ) 
+    Session.append(float(thedata[i][headerdict['Session']] ) ) 
+    Age.append(float(thedata[i][headerdict['Age']] ) ) 
+    Clock_Information.append(str(thedata[i][headerdict['Clock.Information']] ) ) 
+    DataFile_Basename.append(str(thedata[i][headerdict['DataFile.Basename']] ) ) 
+    Display_RefreshRate.append(float(thedata[i][headerdict['Display.RefreshRate']] ) ) 
+    ExperimentVersion.append(str(thedata[i][headerdict['ExperimentVersion']] ) ) 
+    GetReadyDummy_OffsetTime.append(float(thedata[i][headerdict['GetReadyDummy.OffsetTime']] ) ) 
+    GetReadyDummy_OnsetTime.append(float(thedata[i][headerdict['GetReadyDummy.OnsetTime']] ) ) 
+    Group.append(float(thedata[i][headerdict['Group']] ) ) 
+    Handedness.append(str(thedata[i][headerdict['Handedness']] ) ) 
+    LowerThresh.append(float(thedata[i][headerdict['LowerThresh']] ) ) 
+    Name.append(str(thedata[i][headerdict['Name']] ) ) 
+    RandomSeed.append(float(thedata[i][headerdict['RandomSeed']] ) ) 
+    ResearcherID.append(float(thedata[i][headerdict['ResearcherID']] ) ) 
+    ResponseVarPEN.append(float(thedata[i][headerdict['ResponseVarPEN']] ) ) 
+    ResponseVarREW.append(float(thedata[i][headerdict['ResponseVarREW']] ) ) 
+    RespWindowPen.append(float(thedata[i][headerdict['RespWindowPen']] ) ) 
+    RespWindowREW.append(float(thedata[i][headerdict['RespWindowREW']] ) ) 
+    RuntimeVersion.append(str(thedata[i][headerdict['RuntimeVersion']] ) ) 
+    RuntimeVersionExpected.append(str(thedata[i][headerdict['RuntimeVersionExpected']] ) ) 
+    SessionDate.append(str(thedata[i][headerdict['SessionDate']] ) ) 
+    SessionStartDateTimeUtc.append(str(thedata[i][headerdict['SessionStartDateTimeUtc']] ) ) 
+    SessionTime.append(str(thedata[i][headerdict['SessionTime']] ) ) 
+    Sex.append(str(thedata[i][headerdict['Sex']] ) ) 
+    StudioVersion.append(str(thedata[i][headerdict['StudioVersion']] ) ) 
+    UpperThresh.append(float(thedata[i][headerdict['UpperThresh']] ) ) 
+    Block.append(float(thedata[i][headerdict['Block']] ) ) 
+    BlockList.append(float(thedata[i][headerdict['BlockList']] ) ) 
+    BlockList_Cycle.append(float(thedata[i][headerdict['BlockList.Cycle']] ) ) 
+    BlockList_Sample.append(float(thedata[i][headerdict['BlockList.Sample']] ) ) 
+    endOfBlock_OffsetTime.append(float(thedata[i][headerdict['endOfBlock.OffsetTime']] ) ) 
+    endOfBlock_OnsetTime.append(float(thedata[i][headerdict['endOfBlock.OnsetTime']] ) ) 
+    FixationStartBlock_OffsetDelay.append(float(thedata[i][headerdict['FixationStartBlock.OffsetDelay']] ) ) 
+    FixationStartBlock_OffsetTime.append(float(thedata[i][headerdict['FixationStartBlock.OffsetTime']] ) ) 
+    FixationStartBlock_OnsetDelay.append(float(thedata[i][headerdict['FixationStartBlock.OnsetDelay']] ) ) 
+    FixationStartBlock_OnsetTime.append(float(thedata[i][headerdict['FixationStartBlock.OnsetTime']] ) ) 
+    Procedure_Block.append(str(thedata[i][headerdict['Procedure[Block]']] ) ) 
+    Running_Block.append(str(thedata[i][headerdict['Running[Block]']] ) ) 
+    Trial.append(float(thedata[i][headerdict['Trial']] ) ) 
+    CellNumber.append(float(thedata[i][headerdict['CellNumber']] ) ) 
+    FeedbackNCneutralFast_OffsetDelay.append(float(thedata[i][headerdict['FeedbackNCneutralFast.OffsetDelay']] ) ) 
+    FeedbackNCneutralFast_OffsetTime.append(float(thedata[i][headerdict['FeedbackNCneutralFast.OffsetTime']] ) ) 
+    FeedbackNCneutralFast_OnsetDelay.append(float(thedata[i][headerdict['FeedbackNCneutralFast.OnsetDelay']] ) ) 
+    FeedbackNCneutralFast_OnsetTime.append(float(thedata[i][headerdict['FeedbackNCneutralFast.OnsetTime']] ) ) 
+    FeedbackNCneutralSlow_OffsetDelay.append(float(thedata[i][headerdict['FeedbackNCneutralSlow.OffsetDelay']] ) ) 
+    FeedbackNCneutralSlow_OffsetTime.append(float(thedata[i][headerdict['FeedbackNCneutralSlow.OffsetTime']] ) ) 
+    FeedbackNCneutralSlow_OnsetDelay.append(float(thedata[i][headerdict['FeedbackNCneutralSlow.OnsetDelay']] ) ) 
+    FeedbackNCneutralSlow_OnsetTime.append(float(thedata[i][headerdict['FeedbackNCneutralSlow.OnsetTime']] ) ) 
+    FeedbackNoChangeOnPEN_OffsetDelay.append(float(thedata[i][headerdict['FeedbackNoChangeOnPEN.OffsetDelay']] ) ) 
+    FeedbackNoChangeOnPEN_OffsetTime.append(float(thedata[i][headerdict['FeedbackNoChangeOnPEN.OffsetTime']] ) ) 
+    FeedbackNoChangeOnPEN_OnsetDelay.append(float(thedata[i][headerdict['FeedbackNoChangeOnPEN.OnsetDelay']] ) ) 
+    FeedbackNoChangeOnPEN_OnsetTime.append(float(thedata[i][headerdict['FeedbackNoChangeOnPEN.OnsetTime']] ) ) 
+    FeedbackNoChangeOnREW_OffsetDelay.append(float(thedata[i][headerdict['FeedbackNoChangeOnREW.OffsetDelay']] ) ) 
+    FeedbackNoChangeOnREW_OffsetTime.append(float(thedata[i][headerdict['FeedbackNoChangeOnREW.OffsetTime']] ) ) 
+    FeedbackNoChangeOnREW_OnsetDelay.append(float(thedata[i][headerdict['FeedbackNoChangeOnREW.OnsetDelay']] ) ) 
+    FeedbackNoChangeOnREW_OnsetTime.append(float(thedata[i][headerdict['FeedbackNoChangeOnREW.OnsetTime']] ) ) 
+    FeedbackWrongMove_OffsetDelay.append(float(thedata[i][headerdict['FeedbackWrongMove.OffsetDelay']] ) ) 
+    FeedbackWrongMove_OffsetTime.append(float(thedata[i][headerdict['FeedbackWrongMove.OffsetTime']] ) ) 
+    FeedbackWrongMove_OnsetDelay.append(float(thedata[i][headerdict['FeedbackWrongMove.OnsetDelay']] ) ) 
+    FeedbackWrongMove_OnsetTime.append(float(thedata[i][headerdict['FeedbackWrongMove.OnsetTime']] ) ) 
+    FixationISI1_OffsetDelay.append(float(thedata[i][headerdict['FixationISI1.OffsetDelay']] ) ) 
+    FixationISI1_OffsetTime.append(float(thedata[i][headerdict['FixationISI1.OffsetTime']] ) ) 
+    FixationISI1_OnsetDelay.append(float(thedata[i][headerdict['FixationISI1.OnsetDelay']] ) ) 
+    FixationISI1_OnsetTime.append(float(thedata[i][headerdict['FixationISI1.OnsetTime']] ) ) 
+    FixationISI1_RESP.append(str(thedata[i][headerdict['FixationISI1.RESP']] ) ) 
+    FixationISI1_RT.append(float(thedata[i][headerdict['FixationISI1.RT']] ) ) 
+    FixationISI2_OffsetDelay.append(float(thedata[i][headerdict['FixationISI2.OffsetDelay']] ) ) 
+    FixationISI2_OffsetTime.append(float(thedata[i][headerdict['FixationISI2.OffsetTime']] ) ) 
+    FixationISI2_OnsetDelay.append(float(thedata[i][headerdict['FixationISI2.OnsetDelay']] ) ) 
+    FixationISI2_OnsetTime.append(float(thedata[i][headerdict['FixationISI2.OnsetTime']] ) ) 
+    FixationISI2_RESP.append(str(thedata[i][headerdict['FixationISI2.RESP']] ) ) 
+    FixationISI2_RT.append(float(thedata[i][headerdict['FixationISI2.RT']] ) ) 
+    FixationITI_OffsetDelay.append(float(thedata[i][headerdict['FixationITI.OffsetDelay']] ) ) 
+    FixationITI_OffsetTime.append(float(thedata[i][headerdict['FixationITI.OffsetTime']] ) ) 
+    FixationITI_OnsetDelay.append(float(thedata[i][headerdict['FixationITI.OnsetDelay']] ) ) 
+    FixationITI_OnsetTime.append(float(thedata[i][headerdict['FixationITI.OnsetTime']] ) ) 
+    Incentive.append(str(thedata[i][headerdict['Incentive']] ) ) 
+    ISI1_time.append(float(thedata[i][headerdict['ISI1_time']] ) ) 
+    ISI2_time.append(float(thedata[i][headerdict['ISI2_time']] ) ) 
+    ITI_time.append(float(thedata[i][headerdict['ITI_time']] ) ) 
+    IValues1.append(float(thedata[i][headerdict['IValues1']] ) ) 
+    IValues1_Cycle.append(float(thedata[i][headerdict['IValues1.Cycle']] ) ) 
+    IValues1_Sample.append(float(thedata[i][headerdict['IValues1.Sample']] ) ) 
+    PenFeedback_OffsetDelay.append(float(thedata[i][headerdict['PenFeedback.OffsetDelay']] ) ) 
+    PenFeedback_OffsetTime.append(float(thedata[i][headerdict['PenFeedback.OffsetTime']] ) ) 
+    PenFeedback_OnsetDelay.append(float(thedata[i][headerdict['PenFeedback.OnsetDelay']] ) ) 
+    PenFeedback_OnsetTime.append(float(thedata[i][headerdict['PenFeedback.OnsetTime']] ) ) 
+    Procedure_Trial.append(str(thedata[i][headerdict['Procedure[Trial]']] ) ) 
+    PunVal.append(float(thedata[i][headerdict['PunVal']] ) ) 
+    RespWinPEN.append(float(thedata[i][headerdict['RespWinPEN']] ) ) 
+    RespWinREW.append(float(thedata[i][headerdict['RespWinREW']] ) ) 
+    RewFeedback_OffsetDelay.append(float(thedata[i][headerdict['RewFeedback.OffsetDelay']] ) ) 
+    RewFeedback_OffsetTime.append(float(thedata[i][headerdict['RewFeedback.OffsetTime']] ) ) 
+    RewFeedback_OnsetDelay.append(float(thedata[i][headerdict['RewFeedback.OnsetDelay']] ) ) 
+    RewFeedback_OnsetTime.append(float(thedata[i][headerdict['RewFeedback.OnsetTime']] ) ) 
+    RewVal.append(float(thedata[i][headerdict['RewVal']] ) ) 
+    Running_Trial.append(str(thedata[i][headerdict['Running[Trial]']] ) ) 
+    Target_OffsetDelay.append(float(thedata[i][headerdict['Target.OffsetDelay']] ) ) 
+    Target_OffsetTime.append(float(thedata[i][headerdict['Target.OffsetTime']] ) ) 
+    Target_OnsetDelay.append(float(thedata[i][headerdict['Target.OnsetDelay']] ) ) 
+    Target_OnsetTime.append(float(thedata[i][headerdict['Target.OnsetTime']] ) ) 
+    Target_RESP.append(str(thedata[i][headerdict['Target.RESP']] ) ) 
+    Target_RT.append(float(thedata[i][headerdict['Target.RT']] ) ) 
+    WarningStim_OffsetDelay.append(float(thedata[i][headerdict['WarningStim.OffsetDelay']] ) ) 
+    WarningStim_OffsetTime.append(float(thedata[i][headerdict['WarningStim.OffsetTime']] ) ) 
+    WarningStim_OnsetDelay.append(float(thedata[i][headerdict['WarningStim.OnsetDelay']] ) ) 
+    WarningStim_OnsetTime.append(float(thedata[i][headerdict['WarningStim.OnsetTime']] ) ) 
+    WarningStim_RESP.append(str(thedata[i][headerdict['WarningStim.RESP']] ) ) 
+    WarningStim_RT.append(float(thedata[i][headerdict['WarningStim.RT']] ) )
+    numtrials += 1
+
+cue_rew = []
+cue_pen = []
+cue_neu = []
+
+fb_rew = []
+fb_rew_nochange = []
+fb_pen = []
+fb_pen_nochange = []
+fb_neu_fast = []
+fb_neu_slow = []
+fb_neu = []
+
+target = []
+
+offset = 0
+
+for i in range(0,numtrials):
+    # handle the target regressor
+    target_time = offset + (Target_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+    target_duration = (Target_OffsetTime[i]-Target_OnsetTime[i])/1000.0 + \
+        (FixationISI2_OffsetTime[i]-FixationISI2_OnsetTime[i])/1000.0
+    target.append([target_time, target_duration, 1])
+
+    # handle the cue regressors
+    thetime = offset + (WarningStim_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+    theduration = (WarningStim_OffsetTime[i]-WarningStim_OnsetTime[i] + \
+        FixationISI1_OffsetTime[i]-FixationISI1_OnsetTime[i])/1000.0
+    if (Incentive[i] == '+$'):
+        cue_rew.append([thetime, theduration, 1])
+    if (Incentive[i] == '-$'):
+        cue_pen.append([thetime, theduration, 1])
+    if (Incentive[i] == '0$'):
+        cue_neu.append([thetime, theduration, 1])
+
+    # handle the feedback regressors
+    if (Incentive[i] == '+$') and (FixationITI_OnsetTime[i]-RewFeedback_OffsetTime[i]<1300):
+        thetime = offset + (RewFeedback_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (RewFeedback_OffsetTime[i]-RewFeedback_OnsetTime[i])/1000.0
+        fb_rew.append([thetime, theduration, 1])
+
+    if (Incentive[i] == '+$') and (FixationITI_OnsetTime[i]-FeedbackNoChangeOnREW_OffsetTime[i]<1300.0):
+        thetime = offset + (FeedbackNoChangeOnREW_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (FeedbackNoChangeOnREW_OffsetTime[i]-FeedbackNoChangeOnREW_OnsetTime[i])/1000.0
+        fb_rew_nochange.append([thetime, theduration, 1])
+        
+    if (Incentive[i] == '-$') and (FixationITI_OnsetTime[i]-PenFeedback_OffsetTime[i]<1300):
+        thetime = offset + (PenFeedback_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (PenFeedback_OffsetTime[i]-PenFeedback_OnsetTime[i])/1000.0
+        fb_pen.append([thetime, theduration, 1])
+
+    if (Incentive[i] == '-$') and (FixationITI_OnsetTime[i]-FeedbackNoChangeOnPEN_OffsetTime[i]<1300.0):
+        thetime = offset + (FeedbackNoChangeOnPEN_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (FeedbackNoChangeOnPEN_OffsetTime[i]-FeedbackNoChangeOnPEN_OnsetTime[i])/1000.0
+        fb_pen_nochange.append([thetime, theduration, 1])
+        
+    neutralfastexists = False
+    if (Incentive[i] == '0$') and (FixationITI_OnsetTime[i]-FeedbackNCneutralFast_OffsetTime[i]<1300.0):
+        thetime = offset + (FeedbackNCneutralFast_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (FeedbackNCneutralFast_OffsetTime[i]-FeedbackNCneutralFast_OnsetTime[i])/1000.0
+        fb_neu_fast.append([thetime, theduration, 1])
+        neutralfastexists = True
+        fb_neu.append([thetime, theduration, 1])
+
+    if (Incentive[i] == '0$') and (FixationITI_OnsetTime[i]-FeedbackNCneutralSlow_OffsetTime[i]<1300.0):
+        thetime = offset + (FeedbackNCneutralSlow_OnsetTime[i]-GetReadyDummy_OffsetTime[i])/1000.0
+        theduration = (FeedbackNCneutralSlow_OffsetTime[i]-FeedbackNCneutralSlow_OnsetTime[i])/1000.0
+        fb_neu_slow.append([thetime, theduration, 1])
+        if not neutralfastexists:
+            fb_neu.append([thetime, theduration, 1])
+
+writeregressor(cue_rew,outputfileroot+'_CueRew.txt')
+writeregressor(cue_pen,outputfileroot+'_CuePen.txt')
+writeregressor(cue_neu,outputfileroot+'_CueNeutral.txt')
+writeregressor(fb_rew,outputfileroot+'_FBRew.txt')
+writeregressor(fb_rew_nochange,outputfileroot+'_FBRewNoChange.txt')
+writeregressor(fb_pen,outputfileroot+'_FBPen.txt')
+writeregressor(fb_pen_nochange,outputfileroot+'_FBPenNoChange.txt')
+writeregressor(fb_neu_slow,outputfileroot+'_FBNeuSlow.txt')
+writeregressor(fb_neu_fast,outputfileroot+'_FBNeuFast.txt')
+writeregressor(fb_neu,outputfileroot+'_FBNeu.txt')
+writeregressor(target,outputfileroot+'_Target.txt')
